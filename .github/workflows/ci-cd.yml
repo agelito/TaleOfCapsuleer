@@ -1,9 +1,8 @@
 name: ci-cd
 
-on: 
-  push:
-    branches:
-        - main
+on:
+  release:
+    types: [published]
 
 jobs:
   bundle:
@@ -35,3 +34,20 @@ jobs:
         with:
           name: ToC.exe
           path: dist/ToC.exe
+
+  release:
+    needs: bundle
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Download binary
+        uses: actions/download-artifact@v3
+        with:
+          name: ToC.exe
+          
+      - name: Release binary
+        uses: JasonEtco/upload-to-release@master
+        with:
+          args: ToC.exe application/vnd.microsoft.portable-executable
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
