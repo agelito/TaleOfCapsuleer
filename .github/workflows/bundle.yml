@@ -1,0 +1,53 @@
+name: bundle
+
+on:
+  release:
+    types: [published]
+
+jobs:
+  bundle:
+    defaults:
+      run:
+        shell: bash
+
+    runs-on: windows-latest
+
+    steps:
+      - name: Set up Python 3.8
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.8
+
+      - name: Check-out repository
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+
+      - name: Install package
+        run: pip install -r requirements.txt
+
+      - name: Build Bundle
+        run: |
+          pyinstaller --noconfirm -F -n ToC -i ToC_logo.ico main.py
+
+      - uses: actions/upload-artifact@v3
+        with:
+          name: ToC.exe
+          path: dist/ToC.exe
+
+  release:
+    needs: bundle
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Download binary
+        uses: actions/download-artifact@v3
+        with:
+          name: ToC.exe
+          
+      - name: Release binary
+        uses: JasonEtco/upload-to-release@master
+        with:
+          args: ToC.exe application/vnd.microsoft.portable-executable
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
