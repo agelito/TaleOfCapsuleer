@@ -28,7 +28,7 @@ jobs:
 
       - name: Build Bundle
         run: |
-          pyinstaller --noconfirm -F -n ToC -i ToC_logo.ico main.py
+          pyinstaller --noconfirm -F -n ToC --add-data "ToC_logo.ico;." -i ToC_logo.ico main.py
 
       - uses: actions/upload-artifact@v3
         with:
