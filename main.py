@@ -7,6 +7,7 @@ import webbrowser
 import tkinter as tk
 import os
 import sys
+import keyboard
 
 #hTttps://customtkinter.tomschimAnsky.com/documentation/
 
@@ -62,7 +63,8 @@ customtkinter.set_default_color_theme("green")  # Themes: blue (default), dark-b
 
 app = customtkinter.CTk()  # create CTk window like you do with the Tk window
 
-print(resource_path("ToC_logo.ico"))
+# Add global keyboard hotkey to do IFF
+keyboard.add_hotkey('ctrl+shift+z', IFF, args=())
 
 try: # Läser in tidigare postion på sidan
     with open('ToC_window_size.json') as f:
